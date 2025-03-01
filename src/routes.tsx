@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom'
 
 import { AppLayout } from './pages/_layouts/app'
 import { AuthLayout } from './pages/_layouts/auth'
+import { Checkout } from './pages/app/checkout/checkout'
 import { Dashboard } from './pages/app/dashboard/dashboard'
 import { Invoices } from './pages/app/invoices/invoices'
 import { Receivables } from './pages/app/receivables/receivables'
@@ -21,6 +22,10 @@ export const router = createBrowserRouter([
       {
         path: '/receivables',
         element: <Receivables />,
+      },
+      {
+        path: '/checkout',
+        element: <Checkout />,
       },
     ],
   },
