@@ -1,14 +1,11 @@
-import { Building, Home, Receipt, ScrollText, ShoppingCart } from 'lucide-react'
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Building, Home, Receipt, ScrollText } from 'lucide-react'
 
 import { AccountMenu } from './account-menu'
+import { CartOpen } from './cart-open'
 import { NavLink } from './nav-link'
 import { Separator } from './ui/separator'
 
 export function Header() {
-  const [cartItemCount] = useState(3)
-
   return (
     <div className="border-b">
       <div className="flex h-16 items-center justify-between px-6">
@@ -33,14 +30,7 @@ export function Header() {
           </nav>
         </div>
         <div className="ml-auto flex items-center gap-2">
-          <div className="relative mr-4">
-            <Link to="/checkout">
-              <ShoppingCart className="h-6 w-6" />
-              <div className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-xs text-destructive-foreground">
-                {cartItemCount}
-              </div>
-            </Link>
-          </div>
+          <CartOpen />
           <AccountMenu />
         </div>
       </div>
