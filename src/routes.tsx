@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom'
 
 import { AppLayout } from './pages/_layouts/app'
 import { AuthLayout } from './pages/_layouts/auth'
+import { NotFound } from './pages/404'
 import { Checkout } from './pages/app/checkout/checkout'
 import { Dashboard } from './pages/app/dashboard/dashboard'
 import { Invoices } from './pages/app/invoices/invoices'
@@ -13,6 +14,7 @@ export const router = createBrowserRouter([
   {
     path: '/',
     element: <AppLayout />,
+    errorElement: <NotFound />,
     children: [
       { path: '/', element: <Dashboard /> },
       {
