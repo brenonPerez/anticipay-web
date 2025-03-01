@@ -1,6 +1,9 @@
+import { Plus } from 'lucide-react'
 import { Helmet } from 'react-helmet-async'
 
 import { Pagination } from '@/components/pagination'
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import {
   Table,
   TableBody,
@@ -9,6 +12,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 
+import { InvoiceRegister } from './invoice-register'
 import { InvoiceTableRow } from './invoice-table-row'
 import { InvoiceTableFilters } from './invoices-table-filters'
 
@@ -17,8 +21,20 @@ export function Invoices() {
     <>
       <Helmet title="Notas fiscais" />
 
-      <div className="flex flex-col gap-4">
+      <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold tracking-tight">Notas fiscais</h1>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button
+              variant="default"
+              className="flex items-center gap-2 rounded-2xl px-6 py-2 shadow-md"
+            >
+              <Plus className="h-5 w-5" />
+              Adicionar Nota Fiscal
+            </Button>
+          </DialogTrigger>
+          <InvoiceRegister />
+        </Dialog>
       </div>
       <div className="space-y-2.5">
         <InvoiceTableFilters />
