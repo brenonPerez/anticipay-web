@@ -1,4 +1,4 @@
-import { Building, Home, ScrollText, ShoppingCart } from 'lucide-react'
+import { Building, Home, Receipt, ScrollText, ShoppingCart } from 'lucide-react'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -24,6 +24,10 @@ export function Header() {
             <NavLink to="/invoices">
               <ScrollText className="h-4 w-4" />
               Notas Fiscais
+            </NavLink>
+            <NavLink to="/receivables">
+              <Receipt className="h-4 w-4" />
+              Antecipação de Recebíveis
             </NavLink>
           </nav>
         </div>
