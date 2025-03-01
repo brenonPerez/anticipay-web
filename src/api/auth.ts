@@ -7,7 +7,7 @@ export interface SignInBody {
   password: string
 }
 
-interface SignInResponse {
+export interface SignInResponse {
   name: string
   token: string
 }

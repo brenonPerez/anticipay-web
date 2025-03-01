@@ -1,10 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation } from '@tanstack/react-query'
 import { Helmet } from 'react-helmet-async'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
+import { registerCompany } from '@/api/register-company'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -16,6 +18,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { BusinessType } from '@/constants/businessType'
+import { useAuth } from '@/contexts/auth-context'
 
 const signUpFormSchema = z
   .object({
@@ -40,6 +43,7 @@ type SignUpForm = z.infer<typeof signUpFormSchema>
 
 export function SignUp() {
   const navigate = useNavigate()
+  const { login } = useAuth()
 
   const {
     register,
@@ -50,18 +54,31 @@ export function SignUp() {
     resolver: zodResolver(signUpFormSchema),
   })
 
+  const { mutateAsync: registerCompanyFn } = useMutation({
+    mutationFn: registerCompany,
+  })
+
   async function handleSignUp(data: SignUpForm) {
     try {
-      console.log(data)
+      const response = await registerCompanyFn({
+        cnpj: data.cnpj,
+        name: data.name,
+        monthlyRevenue: data.monthlyRevenue,
+        businessType: data.businessType,
+        email: data.email,
+        password: data.password,
+      })
 
-      await new Promise((resolve) => setTimeout(resolve, 2000))
+      login({ name: response.name }, response.token)
 
       toast.success('Empresa cadastrada com sucesso!', {
         action: {
-          label: 'Login',
-          onClick: () => navigate('/sign-in'),
+          label: 'Painel',
+          onClick: () => navigate('/'),
         },
       })
+
+      navigate('/')
     } catch (error) {
       toast.error('Erro ao cadastrar empresa.')
     }
@@ -110,7 +127,7 @@ export function SignUp() {
               <Label htmlFor="businessType">Tipo de Negócio</Label>
               <Select
                 onValueChange={(value) =>
-                  setValue('businessType', value as unknown as BusinessType)
+                  setValue('businessType', Number(value) as BusinessType)
                 }
               >
                 <SelectTrigger className="w-full">
