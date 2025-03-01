@@ -1,5 +1,7 @@
 import { ChevronDown, LogOut } from 'lucide-react'
 
+import { useAuth } from '@/contexts/auth-context'
+
 import { Button } from './ui/button'
 import {
   DropdownMenu,
@@ -9,6 +11,8 @@ import {
 } from './ui/dropdown-menu'
 
 export function AccountMenu() {
+  const { user } = useAuth()
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -16,8 +20,7 @@ export function AccountMenu() {
           variant="outline"
           className="flex select-none items-center gap-2"
         >
-          Brenon Company
-          <ChevronDown className="h-4 w-4" />
+          {user?.name || 'Conta'} <ChevronDown className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
 
