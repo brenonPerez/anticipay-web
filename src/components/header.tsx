@@ -2,6 +2,7 @@ import { Building, Home, Receipt, ScrollText, ShoppingCart } from 'lucide-react'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
+import { AccountMenu } from './account-menu'
 import { NavLink } from './nav-link'
 import { Separator } from './ui/separator'
 
@@ -31,14 +32,16 @@ export function Header() {
             </NavLink>
           </nav>
         </div>
-
-        <div className="relative">
-          <Link to="/checkout">
-            <ShoppingCart className="h-6 w-6" />
-            <div className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-xs text-destructive-foreground">
-              {cartItemCount}
-            </div>
-          </Link>
+        <div className="ml-auto flex items-center gap-2">
+          <div className="relative mr-4">
+            <Link to="/checkout">
+              <ShoppingCart className="h-6 w-6" />
+              <div className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-xs text-destructive-foreground">
+                {cartItemCount}
+              </div>
+            </Link>
+          </div>
+          <AccountMenu />
         </div>
       </div>
     </div>
