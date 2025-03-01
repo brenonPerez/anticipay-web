@@ -30,7 +30,9 @@ export function ReceivablesCard() {
         </div>
         <div className="flex justify-between">
           <span className="font-medium">Valor a Receber:</span>
-          <span>R$ 1.313,34</span>
+          <span className="text-emerald-500 dark:text-emerald-400">
+            R$ 1.313,34
+          </span>
         </div>
       </CardContent>
       <CardFooter className="flex justify-end">
