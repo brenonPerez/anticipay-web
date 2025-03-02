@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { Plus } from 'lucide-react'
+import { useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useSearchParams } from 'react-router-dom'
 import { z } from 'zod'
@@ -21,6 +22,7 @@ import { InvoiceTableRow } from './invoice-table-row'
 import { InvoiceTableFilters } from './invoices-table-filters'
 
 export function Invoices() {
+  const [open, setOpen] = useState(false)
   const [searchParams, setSearchParams] = useSearchParams()
 
   const number = searchParams.get('number')
@@ -36,7 +38,7 @@ export function Invoices() {
     .transform((page) => page - 1)
     .parse(searchParams.get('page') ?? '1')
 
-  const { data: result } = useQuery({
+  const { data: result, refetch } = useQuery({
     queryKey: ['invoices', pageIndex, number, amount, dueDate],
     queryFn: () =>
       getInvoices({
@@ -61,9 +63,10 @@ export function Invoices() {
 
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold tracking-tight">Notas fiscais</h1>
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button
+              onClick={() => setOpen(true)}
               variant="default"
               className="flex items-center gap-2 rounded-2xl px-6 py-2 shadow-md"
             >
@@ -71,7 +74,12 @@ export function Invoices() {
               Adicionar Nota Fiscal
             </Button>
           </DialogTrigger>
-          <InvoiceRegister />
+          <InvoiceRegister
+            onClose={() => {
+              setOpen(false)
+              refetch()
+            }}
+          />
         </Dialog>
       </div>
       <div className="space-y-2.5">
