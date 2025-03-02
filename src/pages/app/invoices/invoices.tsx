@@ -38,7 +38,11 @@ export function Invoices() {
     .transform((page) => page - 1)
     .parse(searchParams.get('page') ?? '1')
 
-  const { data: result, refetch } = useQuery({
+  const {
+    data: result,
+    refetch,
+    isLoading,
+  } = useQuery({
     queryKey: ['invoices', pageIndex, number, amount, dueDate],
     queryFn: () =>
       getInvoices({
@@ -56,6 +60,8 @@ export function Invoices() {
       return state
     })
   }
+
+  const hasInvoices = (result?.invoices?.length ?? 0) > 0
 
   return (
     <>
@@ -82,37 +88,52 @@ export function Invoices() {
           />
         </Dialog>
       </div>
+
       <div className="space-y-2.5">
-        <InvoiceTableFilters />
-        <div className="container rounded-md border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[140px] text-center">Número</TableHead>
-                <TableHead className="w-[140px] text-right">Valor</TableHead>
-                <TableHead className="w-[200px] text-center">
-                  Data de vencimento
-                </TableHead>
-                <TableHead className="w-[50px]"></TableHead>
-                <TableHead className="w-[50px]"></TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {result &&
-                result.invoices.map((invoice) => {
-                  return <InvoiceTableRow key={invoice.id} invoice={invoice} />
-                })}
-            </TableBody>
-          </Table>
-          {result && (
+        {hasInvoices && <InvoiceTableFilters />}
+
+        {isLoading ? (
+          <p className="text-center text-lg">Carregando...</p>
+        ) : hasInvoices ? (
+          <div className="container rounded-md border">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-[140px] text-center">
+                    Número
+                  </TableHead>
+                  <TableHead className="w-[140px] text-right">Valor</TableHead>
+                  <TableHead className="w-[200px] text-center">
+                    Data de vencimento
+                  </TableHead>
+                  <TableHead className="w-[50px]"></TableHead>
+                  <TableHead className="w-[50px]"></TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {result?.invoices?.map((invoice) => (
+                  <InvoiceTableRow key={invoice.id} invoice={invoice} />
+                ))}
+              </TableBody>
+            </Table>
+
             <Pagination
               onPageChange={handlePaginate}
               pageIndex={pageIndex}
-              totalCount={result.meta.totalCount}
-              perPage={result.meta.perPage}
+              totalCount={result?.meta.totalCount ?? 0}
+              perPage={result?.meta.perPage ?? 0}
             />
-          )}
-        </div>
+          </div>
+        ) : (
+          <div className="py-20 text-center">
+            <p className="text-2xl font-semibold text-muted-foreground">
+              Nenhuma nota fiscal cadastrada
+            </p>
+            <p className="text-base text-muted-foreground">
+              Adicione sua primeira nota clicando no botão acima.
+            </p>
+          </div>
+        )}
       </div>
     </>
   )

@@ -8,30 +8,50 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 
-export function ReceivablesCard() {
+interface ReceivablesCardProps {
+  invoice: {
+    id: number
+    number: string
+    amount: number
+    dueDate: Date
+    amountReceivable: number
+  }
+}
+
+export function ReceivablesCard({ invoice }: ReceivablesCardProps) {
   return (
     <Card className="w-[300px]">
       <CardHeader>
         <div className="mb-2">
           <CardTitle className="text-lg font-semibold">Nota Fiscal</CardTitle>
-          <p className="text-base">1231423455</p>
+          <p className="text-base">{invoice.number}</p>
         </div>
         <div>
           <CardDescription className="text-sm text-muted-foreground">
             Data de Vencimento
           </CardDescription>
-          <p className="text-base">09/05/2025</p>
+          <p className="text-base">
+            {new Date(invoice.dueDate).toLocaleDateString('pt-BR')}
+          </p>
         </div>
       </CardHeader>
       <CardContent className="space-y-2">
         <div className="flex justify-between">
           <span className="font-medium">Valor da nota:</span>
-          <span>R$ 1.400,00</span>
+          <span>
+            {invoice.amount.toLocaleString('pt-BR', {
+              style: 'currency',
+              currency: 'BRL',
+            })}
+          </span>
         </div>
         <div className="flex justify-between">
           <span className="font-medium">Valor a Receber:</span>
           <span className="text-emerald-500 dark:text-emerald-400">
-            R$ 1.313,34
+            {invoice.amountReceivable.toLocaleString('pt-BR', {
+              style: 'currency',
+              currency: 'BRL',
+            })}
           </span>
         </div>
       </CardContent>
