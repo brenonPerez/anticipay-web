@@ -1,6 +1,10 @@
+import { useQuery } from '@tanstack/react-query'
 import { Plus } from 'lucide-react'
 import { Helmet } from 'react-helmet-async'
+import { useSearchParams } from 'react-router-dom'
+import { z } from 'zod'
 
+import { getInvoices } from '@/api/get-invoices'
 import { Pagination } from '@/components/pagination'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
@@ -17,6 +21,40 @@ import { InvoiceTableRow } from './invoice-table-row'
 import { InvoiceTableFilters } from './invoices-table-filters'
 
 export function Invoices() {
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  const number = searchParams.get('number')
+  const amount = searchParams.get('amount')
+    ? Number(searchParams.get('amount'))
+    : null
+  const dueDate = searchParams.get('dueDate')
+    ? new Date(searchParams.get('dueDate') as string)
+    : null
+
+  const pageIndex = z.coerce
+    .number()
+    .transform((page) => page - 1)
+    .parse(searchParams.get('page') ?? '1')
+
+  const { data: result } = useQuery({
+    queryKey: ['invoices', pageIndex, number, amount, dueDate],
+    queryFn: () =>
+      getInvoices({
+        pageIndex,
+        number,
+        amount,
+        dueDate,
+      }),
+  })
+
+  function handlePaginate(pageIndex: number) {
+    setSearchParams((state) => {
+      state.set('page', (pageIndex + 1).toString())
+
+      return state
+    })
+  }
+
   return (
     <>
       <Helmet title="Notas fiscais" />
@@ -42,20 +80,30 @@ export function Invoices() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[140px]">Número</TableHead>
-                <TableHead className="w-[140px]">Valor</TableHead>
-                <TableHead className="w-[200px]">Data de vencimento</TableHead>
+                <TableHead className="w-[140px] text-center">Número</TableHead>
+                <TableHead className="w-[140px] text-right">Valor</TableHead>
+                <TableHead className="w-[200px] text-center">
+                  Data de vencimento
+                </TableHead>
                 <TableHead className="w-[50px]"></TableHead>
                 <TableHead className="w-[50px]"></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {Array.from({ length: 10 }).map((_, i) => {
-                return <InvoiceTableRow key={i} />
-              })}
+              {result &&
+                result.invoices.map((invoice) => {
+                  return <InvoiceTableRow key={invoice.id} invoice={invoice} />
+                })}
             </TableBody>
           </Table>
-          <Pagination pageIndex={0} totalCount={105} perPage={10} />
+          {result && (
+            <Pagination
+              onPageChange={handlePaginate}
+              pageIndex={pageIndex}
+              totalCount={result.meta.totalCount}
+              perPage={result.meta.perPage}
+            />
+          )}
         </div>
       </div>
     </>
