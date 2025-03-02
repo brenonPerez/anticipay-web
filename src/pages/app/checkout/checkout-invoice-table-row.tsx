@@ -16,11 +16,13 @@ export interface Invoice {
 interface CheckoutInvoiceTableRowProps {
   invoice: Invoice
   onRemove: () => void
+  isCheckoutConfirmed: boolean
 }
 
 export function CheckoutInvoiceTableRow({
   invoice,
   onRemove,
+  isCheckoutConfirmed,
 }: CheckoutInvoiceTableRowProps) {
   return (
     <TableRow>
@@ -40,12 +42,14 @@ export function CheckoutInvoiceTableRow({
           currency: 'BRL',
         })}
       </TableCell>
-      <TableCell>
-        <Button variant="outline" size="xs" onClick={onRemove}>
-          <X className="mr-2 h-3 w-3" />
-          Remover
-        </Button>
-      </TableCell>
+      {!isCheckoutConfirmed && (
+        <TableCell>
+          <Button variant="outline" size="xs" onClick={onRemove}>
+            <X className="mr-2 h-3 w-3" />
+            Remover
+          </Button>
+        </TableCell>
+      )}
     </TableRow>
   )
 }
