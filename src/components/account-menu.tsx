@@ -1,4 +1,5 @@
 import { ChevronDown, LogOut } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 import { useAuth } from '@/contexts/auth-context'
 
@@ -11,7 +12,13 @@ import {
 } from './ui/dropdown-menu'
 
 export function AccountMenu() {
-  const { user } = useAuth()
+  const { user, logout } = useAuth()
+  const navigate = useNavigate()
+
+  const handleLogout = () => {
+    logout()
+    navigate('/sign-in')
+  }
 
   return (
     <DropdownMenu>
@@ -25,7 +32,10 @@ export function AccountMenu() {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="end" className="w-56">
-        <DropdownMenuItem className="text-rose-500 dark:text-rose-400">
+        <DropdownMenuItem
+          className="text-rose-500 dark:text-rose-400"
+          onClick={handleLogout}
+        >
           <LogOut className="mr-2 h-4 w-4" />
           <span>Sair</span>
         </DropdownMenuItem>

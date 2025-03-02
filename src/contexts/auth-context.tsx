@@ -1,4 +1,10 @@
-import { createContext, ReactNode, useContext, useState } from 'react'
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
 
 interface User {
   name: string
@@ -24,16 +30,25 @@ export function AuthProvider({ children }: AuthProviderProps) {
     localStorage.getItem('token') || '',
   )
 
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user')
+    if (storedUser) {
+      setUser(JSON.parse(storedUser))
+    }
+  }, [])
+
   const login = (userData: User, token: string) => {
     setUser(userData)
     setToken(token)
     localStorage.setItem('token', token)
+    localStorage.setItem('user', JSON.stringify(userData))
   }
 
   const logout = () => {
     setUser(null)
     setToken('')
     localStorage.removeItem('token')
+    localStorage.removeItem('user')
   }
 
   return (
