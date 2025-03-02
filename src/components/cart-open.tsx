@@ -1,24 +1,25 @@
+import { useQuery } from '@tanstack/react-query'
 import { ShoppingCart } from 'lucide-react'
-import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { getCartOpen } from '@/api/get-cart-open'
 
 export function CartOpen() {
-  const [cartItemCount, setCartItemCount] = useState(0)
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['cart-open'],
+    queryFn: getCartOpen,
+  })
 
-  useEffect(() => {
-    async function fetchCartOpen() {
-      try {
-        const data = await getCartOpen()
-        setCartItemCount(data.invoiceCount)
-      } catch (error) {
-        console.error('Erro ao buscar itens do carrinho:', error)
-      }
-    }
+  const cartItemCount = data?.invoiceCount || 0
 
-    fetchCartOpen()
-  }, [])
+  if (isLoading) {
+    return <div>Carregando...</div>
+  }
+
+  if (error) {
+    console.error('Erro ao buscar itens do carrinho:', error)
+    return <div>Erro ao carregar o carrinho</div>
+  }
 
   return (
     <div className="relative mr-4">

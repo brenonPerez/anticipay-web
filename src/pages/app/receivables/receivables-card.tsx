@@ -16,9 +16,13 @@ interface ReceivablesCardProps {
     dueDate: Date
     amountReceivable: number
   }
+  onAddToCart: (invoiceId: number) => void
 }
 
-export function ReceivablesCard({ invoice }: ReceivablesCardProps) {
+export function ReceivablesCard({
+  invoice,
+  onAddToCart,
+}: ReceivablesCardProps) {
   return (
     <Card className="w-[300px]">
       <CardHeader>
@@ -56,7 +60,9 @@ export function ReceivablesCard({ invoice }: ReceivablesCardProps) {
         </div>
       </CardContent>
       <CardFooter className="flex justify-end">
-        <Button>Adicionar ao Carrinho</Button>
+        <Button onClick={() => onAddToCart(invoice.id)}>
+          Adicionar ao Carrinho
+        </Button>
       </CardFooter>
     </Card>
   )
