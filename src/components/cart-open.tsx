@@ -10,15 +10,14 @@ export function CartOpen() {
     queryFn: getCartOpen,
   })
 
-  const cartItemCount = data?.invoiceCount || 0
+  let cartItemCount = data?.invoiceCount || 0
 
   if (isLoading) {
     return <div>Carregando...</div>
   }
 
   if (error) {
-    console.error('Erro ao buscar itens do carrinho:', error)
-    return <div>Erro ao carregar o carrinho</div>
+    cartItemCount = 0
   }
 
   return (

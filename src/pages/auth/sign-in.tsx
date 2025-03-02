@@ -46,12 +46,7 @@ export function SignIn() {
 
       login({ name: response.name }, response.token)
 
-      toast.success('Login realizado com sucesso!', {
-        action: {
-          label: 'Painel',
-          onClick: () => navigate('/'),
-        },
-      })
+      toast.success('Login realizado com sucesso!')
 
       navigate('/')
     } catch (error) {

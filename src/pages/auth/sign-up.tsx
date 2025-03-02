@@ -71,12 +71,7 @@ export function SignUp() {
 
       login({ name: response.name }, response.token)
 
-      toast.success('Empresa cadastrada com sucesso!', {
-        action: {
-          label: 'Painel',
-          onClick: () => navigate('/'),
-        },
-      })
+      toast.success('Empresa cadastrada com sucesso!')
 
       navigate('/')
     } catch (error) {
