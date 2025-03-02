@@ -1,7 +1,10 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Helmet } from 'react-helmet-async'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
 
 import { getCartOpenDetails } from '@/api/get-cart-open-details'
+import { removeInvoiceInCart } from '@/api/remove-invoice'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
@@ -15,13 +18,34 @@ import {
 import { CheckoutInvoiceTableRow } from './checkout-invoice-table-row'
 
 export function Checkout() {
-  const { data, isLoading } = useQuery({
+  const queryClient = useQueryClient()
+  const navigate = useNavigate()
+  const { data, isLoading, error } = useQuery({
     queryKey: ['cart-open-details'],
     queryFn: getCartOpenDetails,
   })
 
+  const { mutateAsync: removeFromCart } = useMutation({
+    mutationFn: removeInvoiceInCart,
+    onSuccess: () => {
+      toast.success('Nota fiscal removida do carrinho sucesso!')
+      queryClient.invalidateQueries({ queryKey: ['cart-open-details'] })
+      queryClient.invalidateQueries({ queryKey: ['cart-open'] })
+    },
+  })
+
   if (isLoading) {
     return <div>Carregando...</div>
+  }
+
+  if (error) {
+    return (
+      <div className="py-20 text-center">
+        <p className="text-2xl font-semibold text-muted-foreground">
+          Erro ao carregar os detalhes do carrinho
+        </p>
+      </div>
+    )
   }
 
   const {
@@ -102,6 +126,9 @@ export function Checkout() {
                         <CheckoutInvoiceTableRow
                           key={invoice.id}
                           invoice={invoice}
+                          onRemove={() =>
+                            removeFromCart({ invoiceId: invoice.id })
+                          }
                         />
                       ))}
                     </TableBody>
@@ -132,7 +159,9 @@ export function Checkout() {
               </Card>
 
               <div className="flex justify-end space-x-4">
-                <Button variant="outline">Cancelar</Button>
+                <Button variant="outline" onClick={() => navigate('/')}>
+                  Cancelar
+                </Button>
                 <Button>Confirmar Antecipação</Button>
               </div>
             </>

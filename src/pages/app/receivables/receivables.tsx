@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Helmet } from 'react-helmet-async'
+import { toast } from 'sonner'
 
 import { addInvoiceInCart } from '@/api/add-invoice-in-cart'
 import { getInvoicesNotInCart } from '@/api/get-invoices-not-in-cart'
@@ -12,8 +13,9 @@ export function Receivables() {
   const { mutateAsync: addToCart } = useMutation({
     mutationFn: addInvoiceInCart,
     onSuccess: () => {
+      toast.success('Nota fiscal adicionada no carrinho sucesso!')
       queryClient.invalidateQueries({ queryKey: ['invoices-not-in-cart'] })
-      queryClient.invalidateQueries({ queryKey: ['cart-open'] }) // Invalidação da query 'cart-open'
+      queryClient.invalidateQueries({ queryKey: ['cart-open'] })
     },
   })
 

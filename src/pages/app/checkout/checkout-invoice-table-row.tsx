@@ -15,10 +15,12 @@ export interface Invoice {
 
 interface CheckoutInvoiceTableRowProps {
   invoice: Invoice
+  onRemove: () => void
 }
 
 export function CheckoutInvoiceTableRow({
   invoice,
+  onRemove,
 }: CheckoutInvoiceTableRowProps) {
   return (
     <TableRow>
@@ -39,7 +41,7 @@ export function CheckoutInvoiceTableRow({
         })}
       </TableCell>
       <TableCell>
-        <Button variant="outline" size="xs">
+        <Button variant="outline" size="xs" onClick={onRemove}>
           <X className="mr-2 h-3 w-3" />
           Remover
         </Button>
